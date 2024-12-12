@@ -25,7 +25,6 @@ const productsSlice = createSlice({
             state.isLoading = false,
             state.products = (action.payload);
             
-            
         })
 
         builder.addCase (getProducts.rejected, (state, action) => {

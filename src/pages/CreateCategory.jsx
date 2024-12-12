@@ -1,37 +1,71 @@
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { getDatabase, push, ref, } from "firebase/database";
-import app from "../database/firabaseConfig";
+import { categorySchema } from "../validation/validationSchema";
+import { getFirebaseDataEdit, setDataToFirebase, updateFirebaseData } from "../database/firebaseUtils";
+import { useNavigate, useParams } from "react-router";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
+
 
 export default function CreateCategory() {
 
-    const schema = yup
-        .object({
-            categoryName: yup.string().required(),
-            categoryImageUrl: yup.string().required().url()
-        })
-        .required()
-
+    const navigate =  useNavigate();
+    const params = useParams()
+    
+    
     const {
         register,
         handleSubmit,
         formState: { errors },
+        reset
     } = useForm({
-        resolver: yupResolver(schema),
+        resolver: yupResolver(categorySchema),
+        defaultValues: {
+            categoryName : "",
+            categoryImageUrl: ""
+        }
+
     });
 
     // data push in database
 
     const onSubmit = (data) => {
-        const db = getDatabase(app);
-    push(ref(db, 'categories/'), data);
+        if (params.id) {
+            updateFirebaseData(`categories/${params.id}`,data);
+
+            toast.success("update is successful", {
+                position: "top-center"
+            });
+
+        } else {
+            setDataToFirebase ("categories", data)
+        }
+    navigate(-1)
 };   
+
+
+    useEffect(()=> {
+        async function getData() {
+
+            let res = await getFirebaseDataEdit("categories/" + params.id);
+            reset(res);
+            console.log(res);
+        }
+
+        if(params.id) {
+            getData();
+         }
+         else reset({
+            categoryName : "",
+            categoryImageUrl: ""
+         })
+         
+    },[params])
 
     return (
         <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg">
-            <h2 className="text-2xl font-bold mb-4 text-center">Add Product</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center"> {params.id ? "Edit Category" : "Add Category"}</h2>
             <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
                 {/* Product Name */}
                 <div>
@@ -77,7 +111,7 @@ export default function CreateCategory() {
                     type="submit"
                     className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600"
                 >
-                    Submit
+                  {params.id ? "Update Category" : "Add Category"}
                 </button>
             </form>
         </div>
