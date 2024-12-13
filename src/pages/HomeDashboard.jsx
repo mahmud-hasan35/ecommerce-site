@@ -1,31 +1,42 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategories } from "../features/categories/categorySlice";
+import { deleteCategories, getCategories } from "../features/categories/categorySlice";
 import { Link } from "react-router";
+import Modal from "../component/Modal";
+import { removeDataFromFirebase } from "../database/firebaseUtils";
 
 
 export default function HomeDashboard() {
 
     const categoriesData = useSelector((state) => state.categories);
+    
+    const [deleteCategoryId,setDeleteCategoryId] = useState(false)
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getCategories());
-    }, []);
+    }, [dispatch]);
+
+
+    const handleClick = (id) => {
+        setDeleteCategoryId(id)
+    };
+    const handleModalClose = () => {
+        setDeleteCategoryId(false)
+    };
+    const handleDelete = () => {
+        if (deleteCategoryId) {
+        //  removeDataFromFirebase("categories/" + deleteCategoryId)
+        dispatch(deleteCategories(deleteCategoryId))
+        }
+        setDeleteCategoryId(false)
+        
+
+    }
 
 
 
-
-
-    const categories = [
-        { name: "Toys", image: "https://via.placeholder.com/150" },
-        { name: "Toys", image: "https://via.placeholder.com/150" },
-        { name: "Toys", image: "https://via.placeholder.com/150" },
-        { name: "Toys", image: "https://via.placeholder.com/150" },
-        { name: "Toys", image: "https://via.placeholder.com/150" },
-        { name: "Toys", image: "https://via.placeholder.com/150" },
-    ];
 
     const products = [
         {
@@ -106,7 +117,7 @@ export default function HomeDashboard() {
                     <Link to={`/edit-category/${category.id}`} className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
                         Edit
                     </Link>
-                    <button className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 ml-3'">
+                    <button onClick={() => handleClick(category.id)} className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 ml-3'">
                         Delete
                     </button>
                 </div>
@@ -116,6 +127,11 @@ export default function HomeDashboard() {
 
     return (
         <div>
+            {
+                deleteCategoryId && <Modal onClose= {handleModalClose} onDelete = {handleDelete}/>
+
+            }
+            
             <section className="py-8 bg-gray-50">
                 <div className="container mx-auto px-4">
                     <h2 className="text-2xl font-bold text-center mb-6">
@@ -183,6 +199,8 @@ export default function HomeDashboard() {
                     </div>
                 </div>
             </section>
+            
         </div>
+        
     );
 }
