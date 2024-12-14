@@ -7,3 +7,12 @@ export const categorySchema = yup
     categoryImageUrl: yup.string().required().url()
 })
 .required();
+
+
+export const productFromSchema = yup
+.object({
+    productName: yup.string().required(),
+    productPrice: yup.number().required(),
+    productImageUrl: yup.string().required().url(),
+})
+.required();

@@ -3,85 +3,103 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteCategories, getCategories } from "../features/categories/categorySlice";
 import { Link } from "react-router";
 import Modal from "../component/Modal";
-import { removeDataFromFirebase } from "../database/firebaseUtils";
-
+import { deleteProducts, getProducts } from "../features/products/productsSlice";
 
 export default function HomeDashboard() {
-
     const categoriesData = useSelector((state) => state.categories);
-    
-    const [deleteCategoryId,setDeleteCategoryId] = useState(false)
+    const products = useSelector((state) => state.products)
+    const [deleteCategoryId, setDeleteCategoryId] = useState(false);
+    const [deleteProductId, setDeleteProductId] = useState(false)
+
 
     const dispatch = useDispatch();
 
+    const data = useSelector((state) => state.products)
+    useEffect(() => {
+        dispatch(getProducts());
+    }, []);
+    console.log(data);
+
+
     useEffect(() => {
         dispatch(getCategories());
+       
     }, [dispatch]);
 
 
     const handleClick = (id) => {
-        setDeleteCategoryId(id)
+        setDeleteCategoryId(id);
+    };
+    const handleDeleteProductClick = (id) => {
+        setDeleteProductId(id);
     };
     const handleModalClose = () => {
         setDeleteCategoryId(false)
+        setDeleteProductId(false)
     };
     const handleDelete = () => {
         if (deleteCategoryId) {
-        //  removeDataFromFirebase("categories/" + deleteCategoryId)
-        dispatch(deleteCategories(deleteCategoryId))
+            //  removeDataFromFirebase("categories/" + deleteCategoryId)
+            dispatch(deleteCategories(deleteCategoryId))
+            setDeleteCategoryId(null)
         }
-        setDeleteCategoryId(false)
-        
+      
+    };
+    const handleDeleted = () => {
 
-    }
+        if (deleteProductId) {
+            dispatch(deleteProducts(deleteProductId))
+            setDeleteProductId(false)
+        }
+    };
 
 
 
 
-    const products = [
-        {
-            id: 1,
-            name: "Black Male T-Shirt",
-            price: 20.0,
-            image: "https://via.placeholder.com/150",
-            rating: 4,
-        },
-        {
-            id: 2,
-            name: "Black Male T-Shirt",
-            price: 20.0,
-            image: "https://via.placeholder.com/150",
-            rating: 4,
-        },
-        {
-            id: 3,
-            name: "Black Male T-Shirt",
-            price: 20.0,
-            image: "https://via.placeholder.com/150",
-            rating: 4,
-        },
-        {
-            id: 4,
-            name: "Black Male T-Shirt",
-            price: 20.0,
-            image: "https://via.placeholder.com/150",
-            rating: 4,
-        },
-        {
-            id: 5,
-            name: "Black Male T-Shirt",
-            price: 20.0,
-            image: "https://via.placeholder.com/150",
-            rating: 4,
-        },
-        {
-            id: 6,
-            name: "Black Male T-Shirt",
-            price: 20.0,
-            image: "https://via.placeholder.com/150",
-            rating: 4,
-        },
-    ];
+    // const products = [
+    //     {
+    //         id: 1,
+    //         name: "Black Male T-Shirt",
+    //         price: 20.0,
+    //         image: "https://via.placeholder.com/150",
+    //         rating: 4,
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "Black Male T-Shirt",
+    //         price: 20.0,
+    //         image: "https://via.placeholder.com/150",
+    //         rating: 4,
+    //     },
+    //     {
+    //         id: 3,
+    //         name: "Black Male T-Shirt",
+    //         price: 20.0,
+    //         image: "https://via.placeholder.com/150",
+    //         rating: 4,
+    //     },
+    //     {
+    //         id: 4,
+    //         name: "Black Male T-Shirt",
+    //         price: 20.0,
+    //         image: "https://via.placeholder.com/150",
+    //         rating: 4,
+    //     },
+    //     {
+    //         id: 5,
+    //         name: "Black Male T-Shirt",
+    //         price: 20.0,
+    //         image: "https://via.placeholder.com/150",
+    //         rating: 4,
+    //     },
+    //     {
+    //         id: 6,
+    //         name: "Black Male T-Shirt",
+    //         price: 20.0,
+    //         image: "https://via.placeholder.com/150",
+    //         rating: 4,
+    //     },
+    // ];
 
     let categoriesSectionContent;
 
@@ -92,12 +110,12 @@ export default function HomeDashboard() {
     if (!categoriesData.isLoading && categoriesData.isError) {
         categoriesSectionContent = (<div className="text-xl">Error || {categoriesData.error}</div>)
     };
-    
+
     if (!categoriesData.isLoading && !categoriesData.isError && categoriesData.categories.length == 0) {
         categoriesSectionContent = <div className="text-xl">no category found</div>
     };
 
-    
+
     if (!categoriesData.isLoading && !categoriesData.isError && categoriesData.categories.length > 0) {
         categoriesSectionContent = categoriesData.categories.map((category) => (
             <div
@@ -127,11 +145,11 @@ export default function HomeDashboard() {
 
     return (
         <div>
-            {
-                deleteCategoryId && <Modal onClose= {handleModalClose} onDelete = {handleDelete}/>
+            {deleteCategoryId && <Modal onClose={handleModalClose} onDelete={handleDelete} />}
+            {deleteProductId && <Modal onClose={handleModalClose} onDelete={handleDeleted} />}
 
-            }
-            
+
+
             <section className="py-8 bg-gray-50">
                 <div className="container mx-auto px-4">
                     <h2 className="text-2xl font-bold text-center mb-6">
@@ -151,22 +169,22 @@ export default function HomeDashboard() {
                         Products
                     </h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                        {products.map((product) => (
+                        {products.products.map((product) => (
                             <div
                                 key={product.id}
                                 className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden"
                             >
                                 <img
-                                    src={product.image}
+                                    src={product.productImageUrl}
                                     alt={product.name}
                                     className="w-full h-40 object-cover"
                                 />
                                 <div className="p-4">
                                     <h3 className="text-lg font-semibold text-gray-800">
-                                        {product.name}
+                                        {product.productName}
                                     </h3>
                                     <p className="text-red-500 font-bold">
-                                        ${product.price.toFixed(2)}
+                                        ${product.productPrice.toFixed(2)}
                                     </p>
                                     <div className="flex items-center mt-2">
                                         {Array.from({ length: 5 }).map((_, index) =>
@@ -189,7 +207,7 @@ export default function HomeDashboard() {
                                         <button className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
                                             Edit
                                         </button>
-                                        <button className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
+                                        <button onClick={() => handleDeleteProductClick(product.id)} className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
                                             Delete
                                         </button>
                                     </div>
@@ -199,8 +217,8 @@ export default function HomeDashboard() {
                     </div>
                 </div>
             </section>
-            
+
         </div>
-        
+
     );
 }

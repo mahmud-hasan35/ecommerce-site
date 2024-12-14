@@ -18,13 +18,10 @@ export const getCategories = createAsyncThunk("categories/getCategories",
 
 // delete slice
 
-export const deleteCategories = createAsyncThunk("categories/deleteCategories",
-    async (id) => {
-        const respons = await  removeDataFromFirebase("categories/" + id);
-        return id
-    }
-)
-
+export const  deleteCategories = createAsyncThunk("categories/deleteCategories" , async(id) => {
+    const respons = await removeDataFromFirebase("categories/" + id)
+    return id
+});
 
 const categorySlice = createSlice({
     name: 'categories',
@@ -47,13 +44,12 @@ const categorySlice = createSlice({
 
 // delete slice
 
-        builder.addCase(deleteCategories.fulfilled, (state, action) => {
-            const categoryIndex= state.categories.findIndex(
+        builder.addCase(deleteCategories.fulfilled,(state,action) => {
+            const categoryIndex = state.categories.findIndex(
                 (item) => item.id == action.payload
             );
-            state.categories.splice(categoryIndex, 1 );
-
-        })
+            state.categories.splice(categoryIndex,1)
+        });
         builder.addCase(deleteCategories.rejected, (state, action) => {
             state.isError = true,
             state.error = action.payload.error?.message

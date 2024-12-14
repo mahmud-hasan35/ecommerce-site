@@ -5,6 +5,34 @@ import app from "./firabaseConfig";
 const db = getDatabase(app);
 // read / getData/ from database
 
+// export const  getFirebaseDataProduct = async () => {
+//     const starCountRef = ref(db, "products");
+
+//     return new Promise((resolve,reject) => {
+//         try {
+//             onValue(starCountRef, (snapshot) => {
+//                 const updateProductList = [];
+//                 console.log(snapshot);n
+                
+//                 snapshot.forEach((item) => {
+
+                    
+//                     updateProductList.push({
+//                         id: item.key,
+//                         ...item.val(),
+//                     });
+//                 })
+//                 resolve(updateProductList);
+                
+                
+//             });
+//         } catch (error) {
+//             reject(error)
+//         }
+//     });
+// };
+
+
 export const getFirebaseData = async (tableName) => {
 
     const starCountRef = ref(db, tableName);

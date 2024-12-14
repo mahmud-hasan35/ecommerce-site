@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 
 export default function CreateCategory() {
 
+
     const navigate =  useNavigate();
     const params = useParams()
     
@@ -33,6 +34,7 @@ export default function CreateCategory() {
     const onSubmit = (data) => {
         if (params.id) {
             updateFirebaseData(`categories/${params.id}`,data);
+            
 
             toast.success("update is successful", {
                 position: "top-center"
@@ -40,6 +42,7 @@ export default function CreateCategory() {
 
         } else {
             setDataToFirebase ("categories", data)
+           
         }
     navigate(-1)
 };   
@@ -64,6 +67,8 @@ export default function CreateCategory() {
     },[params])
 
     return (
+        <>
+        
         <div className="max-w-md mx-auto mt-10 p-6 bg-gray-100 shadow-md rounded-lg">
             <h2 className="text-2xl font-bold mb-4 text-center"> {params.id ? "Edit Category" : "Add Category"}</h2>
             <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
@@ -115,5 +120,7 @@ export default function CreateCategory() {
                 </button>
             </form>
         </div>
+        
+        </>
     );
 }
