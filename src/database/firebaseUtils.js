@@ -95,3 +95,15 @@ export const removeDataFromFirebase = (tableName) => {
     
     remove(ref(db, tableName))
 }; 
+
+
+
+//  user profile
+
+export const createUserProfile = async (data) => {
+    const {id, name, role} = data;
+    set(ref(db, "userProfile/" + id),{
+        name,
+        role,
+    });
+};

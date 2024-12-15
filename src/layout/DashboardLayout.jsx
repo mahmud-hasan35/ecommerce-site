@@ -1,5 +1,4 @@
 import { Link, Outlet } from "react-router";
-import { ToastContainer } from "react-toastify";
 
 export default function DashboardLayout() {
     return (
@@ -31,7 +30,7 @@ export default function DashboardLayout() {
             </header>
             <div className="py-5">
                 <Outlet/>
-                <ToastContainer/>
+                
             </div>
         </>
     );

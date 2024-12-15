@@ -1,11 +1,14 @@
 
+
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { categorySchema } from "../validation/validationSchema";
-import { getFirebaseDataEdit, setDataToFirebase, updateFirebaseData } from "../database/firebaseUtils";
+import { categorySchema } from "../../../validation/validationSchema"; 
+
 import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { getFirebaseDataEdit, setDataToFirebase, updateFirebaseData } from "../../../database/firebaseUtils";
 
 
 export default function CreateCategory() {
@@ -46,7 +49,6 @@ export default function CreateCategory() {
         }
     navigate(-1)
 };   
-
 
     useEffect(()=> {
         async function getData() {

@@ -16,3 +16,19 @@ export const productFromSchema = yup
     productImageUrl: yup.string().required().url(),
 })
 .required();
+
+
+
+
+ export const registerValidation = yup.object().shape({
+  name: yup.string().required("Name is required."),
+  email: yup
+    .string()
+    .required("Email is required.")
+    .email("Please provide a valid email."),
+  password: yup.string().required("Password is required."),
+  confirmPassword: yup
+    .string()
+    .required("Confirm Password is required.")
+    .oneOf([yup.ref("password")], "Passwords must match."),
+});
