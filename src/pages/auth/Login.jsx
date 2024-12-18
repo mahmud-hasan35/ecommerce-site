@@ -1,11 +1,78 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { loginValidation } from "../../validation/validationSchema";
+import { toast } from "react-toastify";
+import { auth, loginUser,  } from "../../database/firebaseAuth";
+import { useDispatch } from "react-redux";
+import { createUserProfile, getProfile } from "../../database/firebaseUtils";
+import { Link, useNavigate } from "react-router";
+import { setLoginUserDataToRedux } from "../../features/auth/authSlice";
+import { GoogleAuthProvider,signInWithPopup } from "firebase/auth";
 
 const Login = () => {
+
+  const dispatch =  useDispatch();
+  const navigate = useNavigate();
+  const provider = new GoogleAuthProvider();
+
+
+
+  const {register, handleSubmit, reset, formState: {errors}} =  useForm( {
+    resolver: yupResolver(loginValidation)
+  }
+  );
+
+  const onSubmit = async (data) => {
+    const res = await loginUser(data);
+    if(res.error) {
+      toast.error(res.code)
+    }else {
+
+      let userProfile = await getProfile(res.id)
+      const loginUserInfo = {
+        id: res.id,
+        email: res.email,
+        name: userProfile.name,
+        role: userProfile.role,
+      }
+      dispatch(setLoginUserDataToRedux(loginUserInfo))
+      reset();
+      navigate('/')
+      
+    }
+    
+  };
+  // google login//
+
+  const googleLogin = async () => {
+    try  {
+    const res = await signInWithPopup(auth, provider);
+    const user = res.user;
+    const newUser = {
+      id:user.uid,
+      name: user.displayName,
+      role: "user",
+    };
+    dispatch(setLoginUserDataToRedux({
+      ...newUser,
+      email: user.email,
+    }))
+    createUserProfile(newUser)
+    toast.success("you are succses")
+    navigate("/dashboard")
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  }
 
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Login</h2>
-        <form  className="space-y-4">
+        <form  className="space-y-4" onSubmit={(handleSubmit(onSubmit))}>
           <div>
             <label htmlFor="email" className="block text-gray-600 font-medium">Email</label>
             <input
@@ -14,8 +81,9 @@ const Login = () => {
               name="email"
               className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your email"
-              required
+            {...register ('email')}
             />
+             {errors.email && <span className="text-red-600">{errors.email?.message}</span>}
           </div>
 
           <div>
@@ -26,8 +94,9 @@ const Login = () => {
               name="password"
               className="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your password"
-              required
+              {...register('password')}
             />
+             {errors.password && <span className="text-red-600">{errors.password?.message}</span>}
           </div>
 
           <div className="flex items-center justify-between">
@@ -50,7 +119,7 @@ const Login = () => {
     <div className="flex-grow border-t border-gray-300"></div>
   </div>
 
-  <button
+  <button onClick={() => googleLogin()}
     type="button"
     className="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center"
   >
@@ -66,12 +135,12 @@ const Login = () => {
 
         <p className="mt-4 text-center text-gray-600 text-sm">
          { `Don't have an account? `}
-          <button 
+          <Link to={"/register"}
             
             className="text-blue-500 hover:underline"
           >
             Sign Up
-          </button>
+          </Link>
         </p>
       </div>
     </div>

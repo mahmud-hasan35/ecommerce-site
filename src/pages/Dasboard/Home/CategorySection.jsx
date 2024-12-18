@@ -68,11 +68,11 @@ export default function CategorySection() {
                     {category.categoryName}
                 </p>
 
-                <div className="flex justify-between mt-4">
-                    <Link to={`/edit-category/${category.id}`} className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                <div className=" mt-4">
+                    <Link to={`/edit-category/${category.id}`} className="bg-green-500 text-white py-1 px-4 rounded hover:bg-green-600">
                         Edit
                     </Link>
-                    <button onClick={() => handleClick(category.id)} className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 ml-3'">
+                    <button onClick={() => handleClick(category.id)} className="bg-red-500 text-white py-1 px-4 rounded hover:bg-red-600 ml-8 ">
                         Delete
                     </button>
                 </div>

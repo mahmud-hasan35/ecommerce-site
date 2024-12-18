@@ -4,7 +4,7 @@ import { registerValidation } from "../../validation/validationSchema";
 import { registerUser } from "../../database/firebaseAuth";
 import { toast } from "react-toastify";
 import { createUserProfile } from "../../database/firebaseUtils";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -109,11 +109,11 @@ if (res.error) {
 
         <p className="mt-4 text-center text-gray-600 text-sm">
           Already have an account? 
-          <button 
+          <Link to={"/login"} 
             className="text-blue-500 hover:underline"
           >
             Login
-          </button>
+          </Link>
         </p>
       </div>
     </div>

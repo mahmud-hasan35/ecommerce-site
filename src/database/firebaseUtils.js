@@ -3,34 +3,6 @@ import { getDatabase, ref, onValue, push, set, remove } from "firebase/database"
 import app from "./firabaseConfig";
 
 const db = getDatabase(app);
-// read / getData/ from database
-
-// export const  getFirebaseDataProduct = async () => {
-//     const starCountRef = ref(db, "products");
-
-//     return new Promise((resolve,reject) => {
-//         try {
-//             onValue(starCountRef, (snapshot) => {
-//                 const updateProductList = [];
-//                 console.log(snapshot);n
-                
-//                 snapshot.forEach((item) => {
-
-                    
-//                     updateProductList.push({
-//                         id: item.key,
-//                         ...item.val(),
-//                     });
-//                 })
-//                 resolve(updateProductList);
-                
-                
-//             });
-//         } catch (error) {
-//             reject(error)
-//         }
-//     });
-// };
 
 
 export const getFirebaseData = async (tableName) => {
@@ -107,3 +79,18 @@ export const createUserProfile = async (data) => {
         role,
     });
 };
+
+export const getProfile = async (id) => {
+    return new Promise((resolve, reject) => {
+
+        try {
+            onValue(ref(db,"userProfile/" +id), (snapShot) => {
+                resolve(snapShot.val())
+            });
+        } catch (error) {
+            reject (error)
+            
+        }
+    })
+    
+}

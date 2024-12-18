@@ -50,12 +50,12 @@ export default function ProductSection() {
                         {products.products.map((product) => (
                             <div
                                 key={product.id}
-                                className="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden"
+                                className="  rounded-lg shadow overflow-hidden"
                             >
                                 <img
                                     src={product.productImageUrl}
                                     alt={product.name}
-                                    className="w-full h-40 object-cover"
+                                    className="w-full h-[500px] object-cover"
                                 />
                                 <div className="p-4">
                                     <h3 className="text-lg font-semibold text-gray-800">

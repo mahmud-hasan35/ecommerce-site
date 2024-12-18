@@ -19,7 +19,6 @@ export const productFromSchema = yup
 
 
 
-
  export const registerValidation = yup.object().shape({
   name: yup.string().required("Name is required."),
   email: yup
@@ -32,3 +31,13 @@ export const productFromSchema = yup
     .required("Confirm Password is required.")
     .oneOf([yup.ref("password")], "Passwords must match."),
 });
+
+ export const loginValidation = yup.object().shape({
+  email: yup
+    .string()
+    .required("Email is required.")
+    .email("Please provide a valid email."),
+  password: yup.string().required("Password is required."),
+ 
+})
+.required();
