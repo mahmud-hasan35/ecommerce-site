@@ -1,3 +1,6 @@
+
+
+
 import { NavLink, Outlet, useNavigate } from "react-router";
 import Logo from "../assets/myShop.webp";
 import { useEffect, useState } from "react";
@@ -6,9 +9,11 @@ import { getCategories } from "../features/categories/categorySlice";
 import { getProducts } from "../features/products/productsSlice";
 import Avatar from "react-avatar";
 import { logOutUser } from "../database/firebaseAuth";
+import { onValue, ref } from "firebase/database";
+import { db } from "../database/firebaseUtils";
 
 export default function DashboardLayout() {
-    
+
     const authStore = useSelector((store) => store.auth);
     const dispatch = useDispatch();
 
@@ -19,9 +24,43 @@ export default function DashboardLayout() {
     );
 
     useEffect(() => {
-        dispatch(getCategories());
-        dispatch(getProducts());
-    }, []);
+        const categoryRef = ref(db, "categories")
+        const productRef = ref(db, "products");
+
+        const disableCategory = onValue(categoryRef, (snapshot) => {
+            const updateCategoryList = [];
+            snapshot.forEach((item) => {
+                updateCategoryList.push({
+                    id: item.key,
+                    ...item.val(),
+                });
+            });
+            dispatch(getCategories(updateCategoryList));
+            ;
+        });
+
+        // setProducts
+
+        const disableProduct = onValue(productRef, (snapshot) => {
+            const updateProductList = [];
+            snapshot.forEach((item) => {
+                updateProductList.push({
+                    id: item.key,
+                    ...item.val(),
+                });
+            });
+
+            dispatch(getProducts(updateProductList));
+            ;
+        });
+        return () => {
+            disableCategory();
+            disableProduct();
+        }
+
+    }, [dispatch]);
+
+
 
     const Greetings = () => {
         let myDate = new Date();
@@ -89,18 +128,18 @@ export default function DashboardLayout() {
                 <nav className="flex-1 mt-4">
                     <ul>
                         <li className="p-3 hover:bg-[#475569] cursor-pointer">
-                            <NavLink to={"/"}>Dashboards</NavLink>
+                            <NavLink className={"block"} to={"/dashboard"}>Dashboards</NavLink>
                         </li>
                         <li className="p-3 hover:bg-[#475569] cursor-pointer">
-                            <NavLink to={"index-category"}>
-                                Category   
+                            <NavLink className={"block"} to={"/dashboard/index-category"}>
+                                Category
                             </NavLink>
                         </li>
                         <li className="p-3 hover:bg-[#475569] cursor-pointer">
-                            <NavLink to={"/"}>Products</NavLink>
+                            <NavLink className={"block"} to={"/dashboard/index-product"}>Products</NavLink>
                         </li>
                         <li className="p-3 hover:bg-[#475569] cursor-pointer">
-                            <NavLink to={"/"}>Users</NavLink>
+                            <NavLink className={"block"} to={""}>Users</NavLink>
                         </li>
                     </ul>
                 </nav>
@@ -133,7 +172,7 @@ export default function DashboardLayout() {
 
                     <div className="mr-auto">
                         <h1 className="text-lg font-semibold">
-                            {Greetings()} {authStore.user.name}
+                            {Greetings()} {authStore?.user?.name}
                         </h1>
                     </div>
 
@@ -143,7 +182,7 @@ export default function DashboardLayout() {
                                 <li>
                                     <Avatar
                                         size="40"
-                                        name={authStore.user.name}
+                                        name={authStore?.user?.name}
                                     />
                                 </li>
                                 <li>

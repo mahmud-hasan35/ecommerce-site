@@ -24,11 +24,14 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     const res = await loginUser(data);
+    
     if(res.error) {
       toast.error(res.code)
     }else {
 
       let userProfile = await getProfile(res.id)
+      console.log(userProfile);
+      
       const loginUserInfo = {
         id: res.id,
         email: res.email,
@@ -37,7 +40,7 @@ const Login = () => {
       }
       dispatch(setLoginUserDataToRedux(loginUserInfo))
       reset();
-      navigate('/')
+      navigate("/dashboard")
       
     }
     
@@ -52,12 +55,27 @@ const Login = () => {
       id:user.uid,
       name: user.displayName,
       role: "user",
+      email: user.email
     };
-    dispatch(setLoginUserDataToRedux({
-      ...newUser,
-      email: user.email,
-    }))
-    createUserProfile(newUser)
+    const userProfile = await getProfile(user.uid)
+   
+
+    if (!userProfile || userProfile.email != user.email) {
+      createUserProfile(newUser)
+      dispatch(setLoginUserDataToRedux({
+        ...newUser,
+        role:"user"
+      }))
+      
+    } else {
+      
+      dispatch(setLoginUserDataToRedux({
+        ...newUser,
+        role: userProfile.role
+      }))
+    }
+    
+ 
     toast.success("you are succses")
     navigate("/dashboard")
       

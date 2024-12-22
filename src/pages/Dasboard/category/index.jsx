@@ -1,28 +1,33 @@
-import { useDispatch, useSelector } from "react-redux"
+
+
+
+
+import {  useSelector } from "react-redux"
 import Table from "../../../component/Table"
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
-import { deleteCategories, getCategories } from "../../../features/categories/categorySlice";
 import { removeDataFromFirebase } from "../../../database/firebaseUtils";
 import Modal from "../../../component/Modal";
-export default function IndexCategory() {
+
+
+export default function IndexCategory  () {
     const {categories} = useSelector((store => store.categories));
     const navigate = useNavigate()
 
     const [deletCategoryId, setDeleteCategoryId] = useState(false)
-    const dispatch = useDispatch()
+    
     const handleAdd = () => {
-        navigate("/create-Category")
+      navigate("/dashboard/create-category");
     };
 
     const handleEdit = (data) => {
-        navigate(`/edit-category/${data.id}`)
+      navigate(`/dashboard/edit-category/${data.id}`);
     };
     const handleDelete = () => {
            if (deletCategoryId) {
             async function deleteCat() {
                 const del = await removeDataFromFirebase("categories/" + deletCategoryId)
-                dispatch(deleteCategories(deletCategoryId))
+                // dispatch(deleteCategories(deletCategoryId))
             }
             deleteCat()
             setDeleteCategoryId(false)
@@ -32,7 +37,7 @@ export default function IndexCategory() {
 
 
      useEffect(() => {
-            dispatch(getCategories());
+            // dispatch(getCategories());
            
         }, []);
   return (

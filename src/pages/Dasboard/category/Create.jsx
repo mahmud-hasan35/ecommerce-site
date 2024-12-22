@@ -6,7 +6,7 @@ import { categorySchema } from "../../../validation/validationSchema";
 import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { getFirebaseDataEdit, setDataToFirebase, updateFirebaseData } from "../../../database/firebaseUtils";
+import { getFirebaseDataEdit, setDataToFirebase, updateFirebaseData,  } from "../../../database/firebaseUtils";
 
 
 export default function CreateCategory() {
@@ -45,7 +45,8 @@ export default function CreateCategory() {
             setDataToFirebase ("categories", data)
            
         }
-    navigate("/index-category")
+        navigate("/dashboard/index-category");
+    
 };   
 
     useEffect(()=> {
@@ -83,7 +84,7 @@ export default function CreateCategory() {
                     <input
                         {...register("categoryName")}
 
-                        type="text"
+                        type="name"
                         id="categoryName"
                         name="categoryName"
                         className="mt-1 block w-full p-2 border border-gray-300 rounded-md"

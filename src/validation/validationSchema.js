@@ -14,6 +14,7 @@ export const productFromSchema = yup
     productName: yup.string().required(),
     productPrice: yup.number().required(),
     productImageUrl: yup.string().required().url(),
+    productCategory: yup.string().required(),
 })
 .required();
 
