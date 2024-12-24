@@ -1,6 +1,6 @@
 
 
-import BannerImg from "../../assets/T-Shirt.webp";
+import BannerImg from "../../../assets/T-Shirt.webp";
 import { Link } from "react-router";
 import Slider from "react-slick";
 

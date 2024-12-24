@@ -13,10 +13,12 @@ const productsSlice = createSlice({
     reducers: {
        getProducts: (state, actions) => {
         state.products = actions.payload;
-
        },
+       updateProductsAfterFavorite: (state, action) => {
+        state.products = action.payload
+       }
    }
 });
 
 export default productsSlice.reducer;
-export const { getProducts } = productsSlice.actions
+export const { getProducts, updateProductsAfterFavorite } = productsSlice.actions

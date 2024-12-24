@@ -4,7 +4,6 @@ import app from "./firabaseConfig";
 
 export const db = getDatabase(app);
 
-
 export const getFirebaseData = async (tableName) => {
 
     const starCountRef = ref(db, tableName);
@@ -68,8 +67,6 @@ export const removeDataFromFirebase = (tableName) => {
     remove(ref(db, tableName))
 }; 
 
-
-
 //  user profile
 
 export const createUserProfile = async (data) => {
@@ -90,8 +87,6 @@ export const getProfile = async (id) => {
             });
         } catch (error) {
             reject (error)
-            
         }
     })
-    
 }

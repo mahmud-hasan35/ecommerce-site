@@ -10,7 +10,8 @@ import IndexCategory from "./pages/Dasboard/category/index";
 import CreateCategory from "./pages/Dasboard/category/Create";
 import IndexProduct from "./pages/Dasboard/product/index";
 import HomeLayout from "./layout/HomeLayout";
-import HomeIndex from "./pages/frontEnd/Index";
+import SingleProductIndex from "./pages/frontEnd/product/Index";
+import HomeIndex from "./pages/frontEnd/home/Index";
 
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
         <Routes>
             <Route path="/" element={<HomeLayout/>}>
             <Route index element ={<HomeIndex/>}/>
+            <Route path="single-product/:id" element= {<SingleProductIndex/>}/>
             </Route>
 
             <Route path="login" element = {<Login/>}/>
