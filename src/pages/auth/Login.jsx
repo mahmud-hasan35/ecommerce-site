@@ -61,23 +61,30 @@ const Login = () => {
    
 
     if (!userProfile || userProfile.email != user.email) {
-      createUserProfile(newUser)
+      createUserProfile({
+        ...newUser,
+        role: 'user'
+      });
+      
       dispatch(setLoginUserDataToRedux({
         ...newUser,
-        role:"user"
-      }))
+        role:"user",
+      }),
+    );
+
       
     } else {
       
       dispatch(setLoginUserDataToRedux({
         ...newUser,
         role: userProfile.role
-      }))
-    }
+      }));
+    };
     
- 
     toast.success("you are succses")
     navigate("/dashboard")
+    
+ 
       
     } catch (error) {
       console.log(error);

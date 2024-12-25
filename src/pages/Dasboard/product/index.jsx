@@ -13,7 +13,7 @@ export default function IndexProduct() {
         
         return {
             ...item,
-            productCategory: findCat.categoryName
+            productCategory: findCat?.categoryName
         }
     });
     console.log(updateProducts);

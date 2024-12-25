@@ -1,19 +1,32 @@
+import { Spinner } from "flowbite-react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 
 export default function SingleProductIndex() {
 
-    const {products} = useSelector((store) => store.products)
-    
-    
+    const { products } = useSelector((store) => store.products)
+
     const params = useParams();
     console.log(params);
-    
 
     const product = products.find(pro => pro.id === params.id);
 
+    if (!product) {
+        return (
 
-    let {productImageUrl, productName, productPrice,productCategory } = product;
+
+            <div className="flex justify-center h-64 mt-40 gap-4">
+                <span className="loading loading-bars loading-xs"></span>
+                <span className="loading loading-bars loading-sm"></span>
+                <span className="loading loading-bars loading-md"></span>
+                <span className="loading loading-bars loading-lg"></span>
+            </div>
+
+        )
+    }
+
+    let { productImageUrl, productName, productPrice, productCategory } = product;
+
 
 
     let svg = (
@@ -34,17 +47,23 @@ export default function SingleProductIndex() {
         </svg>
     )
 
+
+
     let count = 3;
     let stats = Array(count).fill(svg);
-  return (
-    <div>
-           <div className="container mx-auto  flex items-center  gap-4 ">
-                <div className="w-1/2">
-                    <img className="w-full h-[660px]  " src={productImageUrl} alt="{productName}" />
+
+
+
+
+    return (
+        <div>
+            <div className="container mx-auto  flex items-center gap-28 ">
+                <div className="w-1/2 p-4">
+                    <img className="w-[500px] h-[520px] ml-auto" src={productImageUrl} alt="{productName}" />
                 </div>
                 <div className="w-1/2">
-                    <h2 className="text-3xl font-semibold ">{productName}</h2>
-                    <span className="text-red-600 text-xl">
+                    <h2 className="text-3xl font-semibold mb-4 ">{productName}</h2>
+                    <span className="text-red-600 text-sm">
                         {productCategory}
                     </span>
                     <p className=" font-semibold mt-3">Price: {productPrice}</p>
@@ -53,14 +72,10 @@ export default function SingleProductIndex() {
                             <div key={index}>{star}</div>
                         ))}
                     </div>
-
                     <button className="bg-red-600 text-white py-2 px-4 rounded">Add to cart</button>
-
-
                 </div>
-            
-        </div>
+            </div>
 
-    </div>
-  )
+        </div>
+    )
 }

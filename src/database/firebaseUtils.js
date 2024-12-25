@@ -89,4 +89,14 @@ export const getProfile = async (id) => {
             reject (error)
         }
     })
+};
+
+// add product to cart
+
+export const setProductToCart = (data) => {
+    const {userId, productId, quantity} = data;
+    push(ref(db, "carts/" + userId),{
+      productId,
+      quantity,
+    });
 }

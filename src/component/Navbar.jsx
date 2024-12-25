@@ -1,7 +1,11 @@
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 
 const Navbar = () => {
     const navigate = useNavigate()
+
+    const {carts} = useSelector((store) => store.carts);
+    
     return (
         <header className="bg-blue-900 text-white">
             <div className="container mx-auto flex justify-between items-center py-2 px-4">
@@ -75,7 +79,7 @@ const Navbar = () => {
                                 />
                             </svg>
                         </button>
-                        <button className="relative text-gray-700 hover:text-black">
+                        <button onClick={() => navigate('/cart-details')} className="relative text-gray-700 hover:text-black">
                             <svg
                                 className="w-6 h-6 text-gray-800 dark:text-white"
                                 aria-hidden="true"
@@ -95,7 +99,7 @@ const Navbar = () => {
                             </svg>
 
                             <span className="absolute top-[-10px] right-[-8px] bg-red-500 text-white text-xs rounded-full px-1">
-                                3
+                             {!carts ? 0 : carts.length}
                             </span>
                         </button>
                     </div>

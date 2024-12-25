@@ -18,6 +18,7 @@ export default function ProductSection() {
             }
             return product
         })
+        
 
         dispatch(updateProductsAfterFavorite(newProductsList))
         
@@ -31,7 +32,7 @@ export default function ProductSection() {
 
         return {
             ...item,
-            productCategory: findCat.categoryName,
+            productCategory: findCat ? findCat?.categoryName : "not available",
         };
     });
 

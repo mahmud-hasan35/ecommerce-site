@@ -1,18 +1,27 @@
+/* eslint-disable react/prop-types */
 
 import React from "react";
 import Popup from "./Popup";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import { setProductToCart } from "../../../../database/firebaseUtils";
 
 export default function ProductItem({ product, onFavorite }) {
 
-    const { id, productName, productPrice, productCategory, productImageUrl, isFavorite } =
-        product;
+    const {user} = useSelector((store) => store.auth);
+    
+    const {carts} = useSelector((store) => store.carts);
+
+
+    const { id, productName, productPrice, productCategory, productImageUrl, isFavorite } = product;
+        
+
+     const activeCart = carts.find((cart) => cart.productId == id);
+     
 
     const [isPopup, setIsPopup] = useState(false);
     const navigate = useNavigate();
- 
-    
 
     const closeHandler = (e) => {
         e.stopPropagation()
@@ -23,11 +32,22 @@ export default function ProductItem({ product, onFavorite }) {
         e.stopPropagation();
         navigate(`/single-product/${id}`);
        
+
+    };
+
+   const  handleAddToCart = (e) => {
+    e.stopPropagation()
+    if(user) {
+        setProductToCart({
+            userId:user.id,
+            productId: id,
+            quantity: 1,
+        });
         
-
-
+    }else {
+        navigate('/login')
     }
-
+   };
 
     let svg = (
         <svg
@@ -99,8 +119,13 @@ export default function ProductItem({ product, onFavorite }) {
                     }
 
                     {/* plus  */}
+                    <button onClick={handleAddToCart} 
+                    disabled= {activeCart ? true : false}
+                    className="bg-red-600 rounded text-white py-2 px-2 inline-block mt-2 disabled:bg-red-200">
                     <svg
-                        className="w-6 h-6 text-red-600 dark:text-white"
+                    
+                    disabled={activeCart ? true : false}
+                        className="w-6 h-6 text-white dark:text-white disabled:text-green-200"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -116,6 +141,8 @@ export default function ProductItem({ product, onFavorite }) {
                             d="M5 12h14m-7 7V5"
                         />
                     </svg>
+
+                    </button>
                 </div>
             </div>
             {isPopup && <Popup onClose={closeHandler}

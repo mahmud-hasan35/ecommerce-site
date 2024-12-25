@@ -3,13 +3,17 @@ import { Outlet } from "react-router";
 import Navbar from "../component/Navbar";
 import Footer from "../component/Footer";
 import { onValue, ref } from "firebase/database";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { db } from "../database/firebaseUtils";
 import { getCategories } from "../features/categories/categorySlice";
 import { getProducts } from "../features/products/productsSlice";
+import { getCarts } from "../features/cart/CartSlice";
 
 export default function HomeLayout() {
     const dispatch = useDispatch();
+    const {user} = useSelector(store => store.auth);
+    
+    
 
     useEffect(() => {
         const categoryRef = ref(db, "categories");
@@ -44,11 +48,32 @@ export default function HomeLayout() {
             dispatch(getProducts(updateProductList));
         });
 
+        // set add to cart//////
+
+        if(user) {
+
+            const starCountRef = ref(db, `carts/${user.id}`);
+
+            onValue(starCountRef, (snapshot) => {
+                const updateCartList = [];
+                snapshot.forEach((item) => {
+                    updateCartList.push({
+                        id: item.key,
+                        ...item.val(),
+                    });
+                });
+                dispatch(getCarts(updateCartList));
+            });
+
+        }
+
         return () => {
             disableCategory();
             disableProduct();
         };
     }, [dispatch]);
+
+    
 
     return (
         <>

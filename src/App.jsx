@@ -10,8 +10,9 @@ import IndexCategory from "./pages/Dasboard/category/index";
 import CreateCategory from "./pages/Dasboard/category/Create";
 import IndexProduct from "./pages/Dasboard/product/index";
 import HomeLayout from "./layout/HomeLayout";
-import SingleProductIndex from "./pages/frontEnd/product/Index";
 import HomeIndex from "./pages/frontEnd/home/Index";
+import SingleProductIndex from "./pages/frontEnd/product/Index";
+import CartDetails from "./pages/frontEnd/cartDetails/CartDetails";
 
 
 export default function App() {
@@ -20,8 +21,8 @@ export default function App() {
             <Route path="/" element={<HomeLayout/>}>
             <Route index element ={<HomeIndex/>}/>
             <Route path="single-product/:id" element= {<SingleProductIndex/>}/>
+            <Route path="cart-details" element={<CartDetails/>}/>
             </Route>
-
             <Route path="login" element = {<Login/>}/>
             <Route path="register" element = {<Register/>}/>
             <Route element = {<Private/>}>
